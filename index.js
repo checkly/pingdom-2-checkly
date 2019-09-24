@@ -81,6 +81,10 @@ function convertCheck (pingdomCheck) {
   // Create locations
   const locations = createLocations(pingdomCheck)
 
+  // Create tags
+  const tags = createTags(pingdomCheck)
+  tags.push('pingdom')
+
   return {
     name: pingdomCheck.name,
     checkType: 'API',
@@ -88,7 +92,7 @@ function convertCheck (pingdomCheck) {
     activated: true,
     request,
     locations,
-    tags: ['pingdom']
+    tags
   }
 }
 
@@ -139,6 +143,12 @@ function createLocations (pingdomCheck) {
   if (pingdomCheck.probe_filters.includes(pingdomRegions.eu)) return euChecklyRegions
   if (pingdomCheck.probe_filters.includes(pingdomRegions.na)) return naChecklyRegions
   return defaultChecklyRegions
+}
+
+function createTags (pingdomCheck) {
+  return pingdomCheck.tags.map(tag => {
+    return tag.name
+  })
 }
 
 if (!args.pingdomApiKey) {
