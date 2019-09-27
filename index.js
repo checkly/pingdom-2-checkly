@@ -20,7 +20,7 @@ async function pingdomToCheckly(pingdomApiKey, checklyApiKey) {
   })
 
   const checkly = axios.create({
-    baseURL: 'http://localhost:3000/v1',
+    baseURL: 'https://api.checklyhq.com/v1',
     timeout: 5000,
     headers: {'Authorization': `Bearer ${checklyApiKey}`}
   })
