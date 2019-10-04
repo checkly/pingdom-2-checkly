@@ -13,6 +13,11 @@ const euChecklyRegions = ['eu-west-1', 'eu-west-2', 'eu-west-3',' eu-central-1',
 
 // Main loop
 async function pingdomToCheckly(pingdomApiKey, checklyApiKey) {
+  const checklyBaseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:3000/v1' : 'https://api.checklyhq.com/v1'
+
+  console.log('## This will converts all Pingdom HTTP checks that are not "paused" to Checkly checks ##')
+  console.log(`Using API host ${checklyBaseUrl}`)
+
   const pingdom = axios.create({
     baseURL: 'https://api.pingdom.com/api/3.1',
     timeout: 5000,
@@ -20,7 +25,7 @@ async function pingdomToCheckly(pingdomApiKey, checklyApiKey) {
   })
 
   const checkly = axios.create({
-    baseURL: 'https://api.checklyhq.com/v1',
+    baseURL: checklyBaseUrl,
     timeout: 5000,
     headers: {'Authorization': `Bearer ${checklyApiKey}`}
   })
@@ -39,6 +44,7 @@ async function pingdomToCheckly(pingdomApiKey, checklyApiKey) {
     const pingdomCheck = await pingdom.get(`/checks/${c.id}`)
 
     // Only try to convert HTTP type checks, store all others and return early
+
     if (!pingdomCheck.data.check.type.http) {
       console.error(`Pingdom check ${pingdomCheck.data.check.name} is not a pingdom HTTP check`)
       couldNotConvert.push(pingdomCheck)
@@ -122,6 +128,16 @@ function createAssertions (pingdomCheck) {
       comparison: 'NOT_CONTAINS'
     })
   }
+
+  if (pingdomCheck.responsetime_threshold) {
+    assertions.push({
+      source: 'RESPONSE_TIME',
+      target: pingdomCheck.responsetime_threshold.toString(),
+      property: '',
+      comparison: 'LESS_THAN'
+    })
+  }
+
   return assertions
 }
 
