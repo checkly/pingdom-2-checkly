@@ -9,6 +9,11 @@ Use this Node.js script to convert Pingdom HTTP type checks to Checkly API type 
 - A Checkly API key
 
 **Usage**
+```bash
+npm i pingdom-2-checkly -g
+pingdom-2-checkly --pingdomApiKey <pingdom APi key> --checklyApiKey <checkly API key>
+```
+or
 
 ```bash
 git clone https://github.com/checkly/pingdom-2-checkly.git
