@@ -1,6 +1,7 @@
 {
-  "name": "pingdom-to-checkly",
+  "name": "pingdom-2-checkly",
   "version": "1.0.0",
+  "bin": "./index.js",
   "description": "",
   "main": "index.js",
   "scripts": {
